@@ -15,10 +15,10 @@ with exp_brands as (
 ),
 sales_over_1000  as (
 	select oi.product_id,
-		   sum(COALESCE(oi.quantity,0))
+		   sum(coalesce(oi.quantity,0))
 	from order_items oi
 	group by oi.product_id
-	having sum(COALESCE(oi.quantity,0)) > 1000
+	having sum(coalesce(oi.quantity,0)) > 1000
 )
 select distinct ep.brand
 from exp_brands ep
@@ -180,7 +180,7 @@ join approved_orders o using (customer_id)
 join order_items oi using (order_id)
 where job_industry_category = 'IT'
 group by c.customer_id, c.first_name, c.last_name, c.job_industry_category 
-having sum(oi.item_list_price_at_sale * oi.quantity) > 10000 and count(distinct o.order_id) >= 3
+having sum(coalesce(oi.item_list_price_at_sale,0) * coalesce(oi.quantity,0)) > 10000 and count(distinct o.order_id) >= 3
 union all
 select c.customer_id, c.first_name, c.last_name, c.job_industry_category 
 from customer c
@@ -188,4 +188,4 @@ join approved_orders o using (customer_id)
 join order_items oi using (order_id)
 where job_industry_category = 'Health'
 group by c.customer_id, c.first_name, c.last_name, c.job_industry_category 
-having sum(oi.item_list_price_at_sale * oi.quantity) > 10000 and count(distinct o.order_id) >= 3
+having sum(coalesce(oi.item_list_price_at_sale,0) * coalesce(oi.quantity,0)) > 10000 and count(distinct o.order_id) >= 3
